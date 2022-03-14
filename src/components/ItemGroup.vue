@@ -6,8 +6,10 @@
       <button @click="add('item')">Add item</button>
     </div>
     <div class="items">
-      {{JSON.stringify(value)}}
-      <ItemComponentFactory v-for="(item, i) in items" :value="item.value" :type="item.type" :key="i" @valueChange="onChildChange(i, $event)"/>
+      <div class="item-wrapper" v-for="(item, i) in items" :key="i">
+        <ItemComponentFactory :value="item.value" :type="item.type" @valueChange="onChildChange(i, $event)"/>
+        <button @click="onChildDelete(i)">X</button>
+      </div>
     </div>
   </div>
 </template>
@@ -56,6 +58,12 @@
           }
         })
         this.$emit('valueChange', newValue)
+      },
+      onChildDelete(index) {
+        const newValue = this.value.filter((e, i) => {
+          return i !== index
+        })
+        this.$emit('valueChange', newValue)
       }
     }
   }
@@ -88,5 +96,10 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+  }
+
+  .item-wrapper {
+    display: grid;
+    grid-template-columns: 1fr auto;
   }
 </style>
